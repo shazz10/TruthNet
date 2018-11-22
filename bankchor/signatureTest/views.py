@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from . import serializers
 from . import models
 from . import forms
+import runme
 # Create your views here.
 
 def homeView(request):
@@ -25,8 +26,26 @@ def checkView(request):
         if form.is_valid():
             check_user=form.cleaned_data['userId']
             check_photo=form.cleaned_data['photo']
-            
-            
+
+            data=[]
+
+            img_base = image.load_img(base_photo, grayscale=True, target_size=(155,220))
+            img_base = image.img_to_array(img_base)
+            data.append(img_base)
+
+            img_check = image.load_img(check_photo,grayscale=True, target_size=(155,220))
+            img_check = image.img_to_array(img_check)
+            data.append(img_check)
+
+            x=np.array(data)
+            x=runme.format_input(x)
+
+            pair= [[x[0],x[1]]]
+            pair=np.array(pair)
+
+            prediction=runme.predict(pair)
+
+            return render(request,'signatureTest/result.html',{'prediction':prediction})
     else:
         form=forms.checkForm()
-    return render(request,'signatureTest/register.html',{'form':form})
+        return render(request,'signatureTest/check.html',{'form':form})
