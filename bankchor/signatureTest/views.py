@@ -23,8 +23,9 @@ def checkView(request):
     if request.method == "POST":
         form=forms.checkForm(request.POST,request.FILES)
         if form.is_valid():
-            user=form.cleaned_data['userId']
-            photo=form.cleaned_data['photo']
+            check_user=form.cleaned_data['userId']
+            check_photo=form.cleaned_data['photo']
+            
             
     else:
         form=forms.checkForm()
