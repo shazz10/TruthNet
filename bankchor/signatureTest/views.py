@@ -26,6 +26,8 @@ def checkView(request):
         if form.is_valid():
             check_user=form.cleaned_data['userId']
             check_photo=form.cleaned_data['photo']
+            filter_photo=model.userInfo.objects.filter(userId=check_user).values('photo')
+            base_photo=filter_photo[0]['photo']
 
             data=[]
 
