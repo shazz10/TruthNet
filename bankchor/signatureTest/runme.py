@@ -32,6 +32,12 @@ K.set_session(sess)
 logging.basicConfig(level=logging.WARNING)
 log = logging.getLogger()
 
+def predict():
+    pred=loaded_model.predict([pair[:,0], pair[:,1]])
+    if pred<9:
+        return True
+    return False
+
 def euclidean_distance(vects):
     x, y = vects
     return K.sqrt(K.sum(K.square(x - y), axis=1, keepdims=True))
@@ -64,19 +70,14 @@ img_height = 155
 img_width = 220
 featurewise_std_normalization = True
 input_shape=(img_height, img_width, 1)
-
-yaml_file = open('model3.yaml', 'r')
+cwd = os.getcwd()
+yaml_file = open(os.path.dirname(os.path.dirname(__file__)),cwd+'/model3.yaml', 'r')
 loaded_model_yaml = yaml_file.read()
 yaml_file.close()
 loaded_model = model_from_yaml(loaded_model_yaml)
-loaded_model.load_weights("model2.h5")
+loaded_model.load_weights(os.path.join(os.path.dirname(os.path.dirname(__file__)),cwd+"/model2.h5"))
 print("Loaded model from disk")
 rms = RMSprop(lr=1e-4, rho=0.9, epsilon=1e-08)
 adadelta = Adadelta()
 loaded_model.compile(loss=contrastive_loss, optimizer=rms)
 
-def predict():
-    pred=loaded_model.predict([pair[:,0], pair[:,1]])
-    if pred<9:
-        return True
-    return False

@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from . import serializers
 from . import models
 from . import forms
-import runme
+from . import runme
 # Create your views here.
 
 def homeView(request):
